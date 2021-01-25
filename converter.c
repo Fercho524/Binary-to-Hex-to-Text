@@ -1,28 +1,17 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <errno.h>
-#include <ctype.h>
+#include "lib.h"
 
-struct row
+char *stringToBinary(char *str)
 {
-    char *original;
-    char *binary;
-    char *hexadecimal;
-    int ascii;
-};
-
-char *stringToBinary(char *s)
-{
-    if (s == NULL){
+    if (str == NULL)
+    {
         return NULL;
     }
-    int slen = strlen(s);
+    int slen = strlen(str);
     errno = 0;
     char *binary = malloc(slen * CHAR_BIT + 1);
-    if (binary == NULL){
-        fprintf(stderr, "malloc has failed in stringToBinary(%s): %s\n", s, strerror(errno));
+    if (binary == NULL)
+    {
+        fprintf(stderr, "malloc has failed in stringToBinary(%s): %s\n", str, strerror(errno));
         return NULL;
     }
     if (slen == 0)
@@ -33,7 +22,7 @@ char *stringToBinary(char *s)
     char *ptr;
     char *start = binary;
     int i;
-    for (ptr = s; *ptr != '\0'; ptr++)
+    for (ptr = str; *ptr != '\0'; ptr++)
     {
         for (i = CHAR_BIT - 1; i >= 0; i--, binary++)
         {
@@ -47,15 +36,19 @@ char *stringToBinary(char *s)
 
 char *binToHexadecimal(char *bin)
 {
+    if (bin == NULL)
+    {
+        return NULL;
+    }
     int binSize = strlen(bin);
-    int hexSize=binSize/4;
+    int hexSize = binSize / 4;
     char part[4];
     char binValues[16][4] = {"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"};
     char hexValues[16][1] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
     char *hex = malloc(hexSize);
     int pos;
 
-    for (int i = 0,pos=0; i < binSize;pos++, i += 4)
+    for (int i = 0, pos = 0; i < binSize; pos++, i += 4)
     {
         part[i % 4] = bin[i];
         part[(i + 1) % 4] = bin[i + 1];
@@ -63,24 +56,24 @@ char *binToHexadecimal(char *bin)
         part[(i + 3) % 4] = bin[i + 3];
         for (int x = 0; x < 16; x++)
         {
-            if (strcmp(part, binValues[x])==1)
+            if (strcmp(part, binValues[x]) == 1)
             {
-                hex[pos]=hexValues[x][0];
+                hex[pos] = hexValues[x][0];
             }
         }
     }
     return hex;
 }
 
-int ascii(char s){
-    int ascii_code=(int)s;
+int ascii(char s)
+{
+    int ascii_code = (int)s;
     return ascii_code;
 }
 
-int main(int argc,char **argv)
-{
-    char *input=argv[1];
-    char *bin = stringToBinary(input);
+void testconverters(){
+    char *input="Ganso";
+    char *bin=stringToBinary(input);
     char *hex=binToHexadecimal(bin);
     int ascii_code=ascii(input[0]);
 
@@ -88,5 +81,4 @@ int main(int argc,char **argv)
     printf("%s\n",input);
     printf("%s\n",bin);
     printf("%s\n",hex);
-    return 0;
 }
