@@ -72,7 +72,7 @@ int ascii(char s)
 }
 
 void testconverters(){
-    char *input="Ganso";
+    char *input="Cadena";
     char *bin=stringToBinary(input);
     char *hex=binToHexadecimal(bin);
     int ascii_code=ascii(input[0]);
